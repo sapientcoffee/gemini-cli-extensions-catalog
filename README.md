@@ -1,0 +1,1 @@
+# gemini-cli-extensions-catalog
