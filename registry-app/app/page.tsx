@@ -73,6 +73,28 @@ export default function Home() {
             </div>
         </section>
 
+        {/* Important Notice */}
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-8">
+            <div className="bg-yellow-500/10 border border-yellow-500/30 rounded-lg p-6 text-coffee-text">
+                <h3 className="text-lg font-bold text-yellow-600 mb-2">Important: Private Repository Access</h3>
+                <p className="text-sm mb-4 leading-relaxed">
+                    If you are installing an extension from a private repository, you must set the <code className="bg-black/20 px-1 py-0.5 rounded text-yellow-500">GITHUB_TOKEN</code> environment variable. 
+                    This allows the Gemini CLI to authenticate and fetch release data.
+                </p>
+                <div className="bg-black/20 rounded p-4 mb-4 text-sm font-mono overflow-x-auto">
+                    <p className="text-coffee-muted mb-2"># 1. Generate a Personal Access Token (PAT) with &apos;repo&apos; scope at:</p>
+                    <a href="https://github.com/settings/tokens" target="_blank" className="text-blue-400 hover:underline mb-4 block">https://github.com/settings/tokens</a>
+                    <p className="text-coffee-muted mb-2"># 2. Set the variable in your terminal:</p>
+                    <p className="text-green-400">export GITHUB_TOKEN=your_token_here</p>
+                </div>
+                <p className="text-sm text-coffee-muted">
+                    If you see a <strong>&quot;Failed to fetch release data ... 404&quot;</strong> error, it usually means the token is missing or invalid.
+                    <br/>
+                    See <a href="https://github.com/google-gemini/gemini-cli/issues/11996" target="_blank" className="text-coffee-accent hover:underline">Issue #11996</a> for details on security improvements.
+                </p>
+            </div>
+        </div>
+
         <main className="flex-grow flex flex-col gap-8 py-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto w-full">
             
             <div className="flex flex-col md:flex-row gap-6 items-center justify-between">
