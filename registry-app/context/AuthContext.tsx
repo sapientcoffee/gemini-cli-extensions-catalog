@@ -28,14 +28,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
             if (currentUser) {
-                // Cymbal Coffee domain restriction check
-                if (!currentUser.email?.endsWith('@cymbal.coffee') && !currentUser.email?.endsWith('@example.com')) { 
-                     alert("Access restricted to @cymbal.coffee users.");
-                     firebaseSignOut(auth);
-                     setUser(null);
-                } else {
-                    setUser(currentUser);
-                }
+                // Allow any authenticated user
+                setUser(currentUser);
             } else {
                 setUser(null);
             }
