@@ -6,7 +6,7 @@
 const admin = require('firebase-admin');
 
 // Initialize with ADC or Project ID
-const projectId = 'gemini-cli-extensions-catalog';
+const projectId = process.env.GOOGLE_CLOUD_PROJECT || 'gemini-cli-extensions-catalog';
 
 if (!admin.apps.length) {
     admin.initializeApp({
