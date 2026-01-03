@@ -1,10 +1,10 @@
 'use client';
 
-import { useState } from 'react';
-import Link from 'next/link';
-import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
+import { useState, useEffect } from 'react';
+import { collection, addDoc, serverTimestamp, getDocs, query, where } from 'firebase/firestore';
 import { db, auth } from '../../lib/firebase';
 import AuthGuard from '../../components/AuthGuard';
+import Header from '../../components/Header';
 
 export default function SubmitPage() {
   const [formData, setFormData] = useState({
@@ -15,8 +15,24 @@ export default function SubmitPage() {
     tags: '',
     imageUrl: ''
   });
+  const [availableTools, setAvailableTools] = useState<{id: string, name: string}[]>([]);
+  const [selectedTools, setSelectedTools] = useState<string[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
+
+  useEffect(() => {
+    const fetchTools = async () => {
+      try {
+        const q = query(collection(db, 'registry'), where('type', '==', 'tool'));
+        const snapshot = await getDocs(q);
+        const tools = snapshot.docs.map(doc => ({ id: doc.id, name: doc.data().name || 'Unknown Tool' }));
+        setAvailableTools(tools);
+      } catch (error) {
+        console.error("Error fetching tools:", error);
+      }
+    };
+    fetchTools();
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -29,6 +45,7 @@ export default function SubmitPage() {
         }
 
         const tagsArray = formData.tags.split(',').map(t => t.trim()).filter(t => t.length > 0);
+        const isPersona = formData.category === 'Persona';
         
         await addDoc(collection(db, 'submissions'), {
             name: formData.name,
@@ -37,6 +54,7 @@ export default function SubmitPage() {
             description: formData.description,
             tags: tagsArray,
             imageUrl: formData.imageUrl || '/file.svg', // Default placeholder
+            associatedTools: isPersona ? selectedTools : [],
             submittedBy: auth.currentUser.uid,
             submittedByEmail: auth.currentUser.email,
             submittedAt: serverTimestamp(),
@@ -52,6 +70,7 @@ export default function SubmitPage() {
             tags: '',
             imageUrl: ''
         });
+        setSelectedTools([]);
     } catch (error) {
         console.error("Error submitting extension:", error);
         setSubmitStatus('error');
@@ -60,20 +79,16 @@ export default function SubmitPage() {
     }
   };
 
+  const toggleTool = (toolId: string) => {
+    setSelectedTools(prev => 
+      prev.includes(toolId) ? prev.filter(id => id !== toolId) : [...prev, toolId]
+    );
+  };
+
   return (
     <AuthGuard>
         <div className="min-h-screen flex flex-col bg-warm-crema">
-        {/* Header */}
-        <header className="border-b border-rich-espresso/10 bg-warm-crema py-4 px-4 sm:px-6 lg:px-8">
-            <div className="max-w-7xl mx-auto flex items-center justify-between">
-                <Link href="/" className="flex items-center gap-2 text-rich-espresso hover:opacity-80 transition-opacity">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="size-5">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18" />
-                    </svg>
-                    <span className="font-bold">Back to Registry</span>
-                </Link>
-            </div>
-        </header>
+        <Header />
 
         <main className="flex-grow py-12 px-4 sm:px-6 lg:px-8">
             <div className="mx-auto max-w-2xl">
@@ -140,6 +155,37 @@ export default function SubmitPage() {
                             ))}
                         </div>
                     </div>
+
+                    {/* Associated Tools (Only for Personas) */}
+                    {formData.category === 'Persona' && availableTools.length > 0 && (
+                        <div>
+                            <span className="block text-base font-bold text-rich-espresso mb-2">Associated Tools</span>
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 bg-warm-crema/20 p-4 rounded-lg border border-rich-espresso/10 max-h-60 overflow-y-auto">
+                                {availableTools.map((tool) => (
+                                    <label key={tool.id} className="flex items-center gap-3 p-2 rounded hover:bg-white cursor-pointer transition-colors">
+                                        <div className={`w-5 h-5 rounded border flex items-center justify-center transition-colors ${
+                                            selectedTools.includes(tool.id) 
+                                            ? 'bg-cymbal-gold border-cymbal-gold text-rich-espresso' 
+                                            : 'border-rich-espresso/30 bg-white'
+                                        }`}>
+                                            {selectedTools.includes(tool.id) && (
+                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="size-3.5">
+                                                    <path fillRule="evenodd" d="M16.704 4.153a.75.75 0 0 1 .143 1.052l-8 10.5a.75.75 0 0 1-1.127.075l-4.5-4.5a.75.75 0 0 1 1.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 0 1 1.05-.143Z" clipRule="evenodd" />
+                                                </svg>
+                                            )}
+                                        </div>
+                                        <input 
+                                            type="checkbox"
+                                            className="sr-only"
+                                            checked={selectedTools.includes(tool.id)}
+                                            onChange={() => toggleTool(tool.id)}
+                                        />
+                                        <span className="text-sm font-medium text-rich-espresso/80">{tool.name}</span>
+                                    </label>
+                                ))}
+                            </div>
+                        </div>
+                    )}
 
                     {/* Description */}
                     <div>

@@ -11,4 +11,5 @@ export interface Extension {
   version: string;
   installCommand: string;
   readme: string;
+  associatedTools?: string[];
 }

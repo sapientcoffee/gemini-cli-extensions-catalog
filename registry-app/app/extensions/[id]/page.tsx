@@ -1,15 +1,67 @@
 'use client';
 
-import { use, useState } from 'react';
-import { mockExtensions } from '@/lib/mockData';
+import { use, useState, useEffect } from 'react';
 import Image from 'next/image';
-import Link from 'next/link';
 import { notFound } from 'next/navigation';
+import { doc, getDoc, getDocs, query, where, documentId, collection } from 'firebase/firestore';
+import { db } from '@/lib/firebase';
+import { Extension } from '@/lib/types';
+import ExtensionCard from '@/components/ExtensionCard';
+import Header from '@/components/Header';
 
 export default function ExtensionDetails({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params);
-  const extension = mockExtensions.find((ext) => ext.id === id);
+  const [extension, setExtension] = useState<Extension | null>(null);
+  const [associatedTools, setAssociatedTools] = useState<Extension[]>([]);
+  const [loading, setLoading] = useState(true);
   const [copied, setCopied] = useState(false);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const docRef = doc(db, 'registry', id);
+        const docSnap = await getDoc(docRef);
+
+        if (docSnap.exists()) {
+          const extData = { id: docSnap.id, ...docSnap.data() } as Extension;
+          setExtension(extData);
+
+          if (extData.associatedTools && extData.associatedTools.length > 0) {
+            // Fetch associated tools
+            const q = query(
+                collection(db, 'registry'), 
+                where(documentId(), 'in', extData.associatedTools)
+            );
+            const toolsSnap = await getDocs(q);
+            const tools = toolsSnap.docs.map(d => ({ id: d.id, ...d.data() } as Extension));
+            setAssociatedTools(tools);
+          }
+        } else {
+          setExtension(null);
+        }
+      } catch (error) {
+        console.error("Error fetching extension details:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [id]);
+
+  if (loading) {
+    return (
+        <div className="min-h-screen flex items-center justify-center bg-warm-crema">
+             <div className="flex flex-col items-center gap-4">
+                <svg className="animate-spin h-10 w-10 text-rich-espresso" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+                <p className="text-rich-espresso font-bold">Loading Extension...</p>
+             </div>
+        </div>
+    );
+  }
 
   if (!extension) {
     notFound();
@@ -23,17 +75,7 @@ export default function ExtensionDetails({ params }: { params: Promise<{ id: str
 
   return (
     <div className="min-h-screen flex flex-col bg-warm-crema">
-      {/* Header (Simplified for sub-page) */}
-      <header className="border-b border-rich-espresso/10 bg-warm-crema py-4 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-7xl mx-auto flex items-center justify-between">
-            <Link href="/" className="flex items-center gap-2 text-rich-espresso hover:opacity-80 transition-opacity">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="size-5">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18" />
-                </svg>
-                <span className="font-bold">Back to Registry</span>
-            </Link>
-        </div>
-      </header>
+      <Header />
 
       <main className="flex-grow py-8 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto w-full">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -43,9 +85,9 @@ export default function ExtensionDetails({ params }: { params: Promise<{ id: str
                 
                 {/* Hero Section */}
                 <div className="flex flex-col sm:flex-row gap-6 items-start">
-                    <div className="relative w-24 h-24 sm:w-32 sm:h-32 shrink-0 rounded-xl overflow-hidden shadow-lg border-2 border-white">
+                    <div className="relative w-24 h-24 sm:w-32 sm:h-32 shrink-0 rounded-xl overflow-hidden shadow-lg border-2 border-white bg-white">
                         <Image 
-                            src={extension.imageUrl} 
+                            src={extension.imageUrl || '/file.svg'} 
                             alt={extension.name} 
                             fill 
                             className="object-cover"
@@ -55,7 +97,7 @@ export default function ExtensionDetails({ params }: { params: Promise<{ id: str
                         <h1 className="text-3xl sm:text-4xl font-bold text-rich-espresso font-heading mb-2">{extension.name}</h1>
                         <p className="text-lg text-rich-espresso/80">{extension.description}</p>
                         <div className="flex flex-wrap gap-2 mt-3">
-                             {extension.tags.map(tag => (
+                             {extension.tags && extension.tags.map(tag => (
                                 <span key={tag} className="text-sm font-medium bg-cymbal-gold/20 text-rich-espresso px-3 py-1 rounded-full">
                                     #{tag}
                                 </span>
@@ -64,12 +106,24 @@ export default function ExtensionDetails({ params }: { params: Promise<{ id: str
                     </div>
                 </div>
 
+                {/* Associated Tools Section */}
+                {associatedTools.length > 0 && (
+                    <div className="bg-white rounded-lg shadow-sm p-6 sm:p-8 border border-rich-espresso/5">
+                        <h2 className="text-2xl font-bold text-rich-espresso font-heading mb-6 border-b border-rich-espresso/10 pb-2">Associated Tools</h2>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            {associatedTools.map(tool => (
+                                <ExtensionCard key={tool.id} extension={tool} />
+                            ))}
+                        </div>
+                    </div>
+                )}
+
                 {/* Readme Content */}
                 <div className="bg-white rounded-lg shadow-sm p-6 sm:p-8 border border-rich-espresso/5">
                     <h2 className="text-2xl font-bold text-rich-espresso font-heading mb-6 border-b border-rich-espresso/10 pb-2">Documentation</h2>
                     <article className="prose prose-stone prose-headings:font-heading prose-headings:text-rich-espresso prose-p:text-rich-espresso/80 prose-a:text-cymbal-gold hover:prose-a:text-rich-espresso max-w-none">
                         {/* We are simulating Markdown rendering by preserving whitespace for now */}
-                        <pre className="font-sans whitespace-pre-wrap">{extension.readme}</pre>
+                        <pre className="font-sans whitespace-pre-wrap">{extension.readme || 'No documentation provided.'}</pre>
                     </article>
                 </div>
             </div>
@@ -81,7 +135,7 @@ export default function ExtensionDetails({ params }: { params: Promise<{ id: str
                 <div className="bg-rich-espresso text-warm-crema rounded-lg p-6 shadow-lg">
                     <h3 className="text-lg font-bold mb-3 text-cymbal-gold">Install Extension</h3>
                     <div className="bg-black/30 rounded p-3 font-mono text-sm mb-4 break-all border border-white/10">
-                        {extension.installCommand}
+                        {extension.installCommand || `gemini install ${extension.name}`}
                     </div>
                     <button 
                         onClick={handleCopy}
@@ -111,11 +165,11 @@ export default function ExtensionDetails({ params }: { params: Promise<{ id: str
                     <div className="space-y-4">
                         <div>
                             <p className="text-sm text-rich-espresso/60">Version</p>
-                            <p className="font-medium text-rich-espresso">{extension.version}</p>
+                            <p className="font-medium text-rich-espresso">{extension.version || '0.0.1'}</p>
                         </div>
                         <div>
                             <p className="text-sm text-rich-espresso/60">Author</p>
-                            <p className="font-medium text-rich-espresso">{extension.author}</p>
+                            <p className="font-medium text-rich-espresso">{extension.author || 'Cymbal Coffee'}</p>
                         </div>
                          <div>
                             <p className="text-sm text-rich-espresso/60">Type</p>
