@@ -8,6 +8,7 @@ import { db } from '../../lib/firebase';
 import { useAuth } from '../../context/AuthContext';
 import AuthGuard from '../../components/AuthGuard';
 import Header from '../../components/Header';
+import { resubmitExtensionAction } from '../actions';
 
 interface Submission {
   id: string;
@@ -48,6 +49,18 @@ export default function ProfilePage() {
 
     return () => unsubscribe();
   }, [user]);
+
+  const handleResubmit = async (id: string) => {
+    try {
+        const token = await user?.getIdToken();
+        if (!token) return;
+        await resubmitExtensionAction(token, id);
+        alert("Extension resubmitted for review.");
+    } catch (error) {
+        console.error(error);
+        alert("Error resubmitting.");
+    }
+  };
 
   const published = submissions.filter(s => s.status === 'approved');
   const pending = submissions.filter(s => s.status !== 'approved');
@@ -125,6 +138,7 @@ export default function ProfilePage() {
                                         <th className="px-6 py-3 text-sm font-bold text-rich-espresso">Status</th>
                                         <th className="px-6 py-3 text-sm font-bold text-rich-espresso">Message</th>
                                         <th className="px-6 py-3 text-sm font-bold text-rich-espresso">Date</th>
+                                        <th className="px-6 py-3 text-sm font-bold text-rich-espresso">Action</th>
                                     </tr>
                                 </thead>
                                 <tbody className="divide-y divide-rich-espresso/5">
@@ -140,6 +154,16 @@ export default function ProfilePage() {
                                             <td className="px-6 py-4 text-sm text-rich-espresso/70">{sub.statusMessage || '-'}</td>
                                             <td className="px-6 py-4 text-sm text-rich-espresso/50">
                                                 {sub.submittedAt?.toDate().toLocaleDateString()}
+                                            </td>
+                                            <td className="px-6 py-4 text-sm">
+                                                {sub.status === 'rejected' && (
+                                                    <button 
+                                                        onClick={() => handleResubmit(sub.id)}
+                                                        className="text-coffee-accent font-bold hover:underline"
+                                                    >
+                                                        Resubmit
+                                                    </button>
+                                                )}
                                             </td>
                                         </tr>
                                     ))}

@@ -2,11 +2,12 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { collection, query, where, onSnapshot, doc, updateDoc } from 'firebase/firestore';
-import { httpsCallable } from 'firebase/functions';
-import { db, functions } from '../../lib/firebase';
+import { collection, query, where, onSnapshot } from 'firebase/firestore';
+import { db } from '../../lib/firebase';
 import AuthGuard from '../../components/AuthGuard';
 import Header from '../../components/Header';
+import { useAuth } from '../../context/AuthContext';
+import { approveSubmissionAction, rejectSubmissionAction, grantAdminRoleAction } from '../actions';
 
 interface Submission {
   id: string;
@@ -22,6 +23,7 @@ export default function AdminPage() {
   const [loading, setLoading] = useState(true);
   const [newAdminEmail, setNewAdminEmail] = useState('');
   const [adminStatus, setAdminStatus] = useState('');
+  const { user } = useAuth();
 
   useEffect(() => {
     const q = query(collection(db, 'submissions'), where('status', '==', 'pending'));
@@ -39,22 +41,21 @@ export default function AdminPage() {
 
   const handleApprove = async (id: string) => {
     try {
-        const approveFunc = httpsCallable(functions, 'approveSubmission');
-        await approveFunc({ submissionId: id });
-        // UI updates automatically via snapshot
+        const token = await user?.getIdToken();
+        if (!token) throw new Error("No auth token");
+        await approveSubmissionAction(token, id);
     } catch (error) {
         console.error("Error approving submission:", error);
-        alert("Failed to approve submission. Check console for details.");
+        alert("Failed to approve submission.");
     }
   };
 
   const handleReject = async (id: string) => {
     if (!confirm("Are you sure you want to reject this submission?")) return;
     try {
-        await updateDoc(doc(db, 'submissions', id), {
-            status: 'rejected',
-            rejectedAt: new Date().toISOString()
-        });
+        const token = await user?.getIdToken();
+        if (!token) throw new Error("No auth token");
+        await rejectSubmissionAction(token, id);
     } catch (error) {
         console.error("Error rejecting submission:", error);
         alert("Failed to reject submission.");
@@ -66,8 +67,9 @@ export default function AdminPage() {
     if(!newAdminEmail) return;
     setAdminStatus('Adding...');
     try {
-        const grantFunc = httpsCallable(functions, 'grantAdminRole');
-        await grantFunc({ email: newAdminEmail });
+        const token = await user?.getIdToken();
+        if (!token) throw new Error("No auth token");
+        await grantAdminRoleAction(token, newAdminEmail);
         setAdminStatus(`Success! ${newAdminEmail} is now an admin.`);
         setNewAdminEmail('');
     } catch (error) {
