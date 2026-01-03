@@ -68,7 +68,7 @@ export default function ExtensionDetails({ params }: { params: Promise<{ id: str
   }
 
   const handleCopy = () => {
-    navigator.clipboard.writeText(extension.installCommand);
+    navigator.clipboard.writeText(extension.installCommand || `gemini extensions install ${extension.repoUrl || extension.name}`);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
@@ -135,7 +135,7 @@ export default function ExtensionDetails({ params }: { params: Promise<{ id: str
                 <div className="bg-rich-espresso text-warm-crema rounded-lg p-6 shadow-lg">
                     <h3 className="text-lg font-bold mb-3 text-cymbal-gold">Install Extension</h3>
                     <div className="bg-black/30 rounded p-3 font-mono text-sm mb-4 break-all border border-white/10">
-                        {extension.installCommand || `gemini install ${extension.name}`}
+                        {extension.installCommand || `gemini extensions install ${extension.repoUrl || extension.name}`}
                     </div>
                     <button 
                         onClick={handleCopy}

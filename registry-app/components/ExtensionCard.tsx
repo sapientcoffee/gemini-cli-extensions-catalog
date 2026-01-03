@@ -42,13 +42,13 @@ export default function ExtensionCard({ extension }: ExtensionCardProps) {
           <p className="text-coffee-muted text-sm leading-relaxed line-clamp-2 min-h-[2.5rem]">{extension.description}</p>
           
           <div className="flex flex-wrap gap-2 pt-3 mt-auto border-t border-coffee-highlight/50">
-            {extension.tags.slice(0, 3).map(tag => (
+            {(extension.tags || []).slice(0, 3).map(tag => (
               <span key={tag} className="text-xs font-mono text-coffee-muted/80 bg-coffee-highlight px-2 py-0.5 rounded border border-transparent hover:border-coffee-muted/30 transition-colors">
                 #{tag}
               </span>
             ))}
-            {extension.tags.length > 3 && (
-                <span className="text-xs font-mono text-coffee-muted/50 px-1 py-0.5">+{extension.tags.length - 3}</span>
+            {(extension.tags || []).length > 3 && (
+                <span className="text-xs font-mono text-coffee-muted/50 px-1 py-0.5">+{(extension.tags || []).length - 3}</span>
             )}
           </div>
         </div>

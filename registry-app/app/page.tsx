@@ -35,7 +35,7 @@ export default function Home() {
 
   const filteredExtensions = extensions.filter(ext => {
     const matchesSearch = ext.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
-                          ext.tags.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase()));
+                          (ext.tags || []).some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase()));
     const matchesFilter = activeFilter === 'all' || ext.type === activeFilter;
     return matchesSearch && matchesFilter;
   });
