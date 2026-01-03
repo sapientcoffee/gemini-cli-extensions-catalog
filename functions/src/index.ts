@@ -25,12 +25,6 @@ initializeApp();
 const db = getFirestore();
 const auth = getAuth();
 
-// Helper to check admin status
-function isAdmin(request: any): boolean {
-    if (!request.auth) return false;
-    return request.auth.token.admin === true;
-}
-
 // Security Scanner Helper
 function hasSecrets(text: string): boolean {
     // Basic regex for Google API Key (AIza...)
@@ -67,7 +61,7 @@ export const onSubmissionCreated = onDocumentCreated("submissions/{docId}", asyn
 
         // 2. Extract Owner/Repo
         // Expected format: https://github.com/owner/repo or similar
-        const match = repoUrl.match(/github\.com\/([^\/]+)\/([^\/]+)/);
+        const match = repoUrl.match(/^https:\/\/github\.com\/([^\/]+)\/([^\/]+)/);
         if (!match) {
             await snapshot.ref.update({
                 status: 'rejected',
@@ -138,6 +132,16 @@ export const onSubmissionCreated = onDocumentCreated("submissions/{docId}", asyn
         // 5. Success! Update Document
         // We trust the manifest more than the user's manual input for Name/Desc
         logger.info(`Submission ${docId} validated. Manifest found at ${manifestUrl}`);
+
+        // Fix GitHub Blob URLs to Raw URLs for images
+        let finalImageUrl = manifest.imageUrl || data.imageUrl;
+        if (finalImageUrl && typeof finalImageUrl === 'string') {
+            // Convert https://github.com/user/repo/blob/branch/path -> https://raw.githubusercontent.com/user/repo/branch/path
+            finalImageUrl = finalImageUrl.replace(
+                /^https?:\/\/github\.com\/([^\/]+)\/([^\/]+)\/blob\/([^\/]+)\/(.+)$/,
+                'https://raw.githubusercontent.com/$1/$2/$3/$4'
+            );
+        }
         
         await snapshot.ref.update({
             status: 'pending',
@@ -146,6 +150,7 @@ export const onSubmissionCreated = onDocumentCreated("submissions/{docId}", asyn
             description: manifest.description, // Overwrite
             version: manifest.version || '0.0.1',
             manifestUrl: manifestUrl,
+            imageUrl: finalImageUrl || null,
             updatedAt: new Date().toISOString()
         });
 

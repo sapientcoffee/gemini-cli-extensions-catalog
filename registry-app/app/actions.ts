@@ -13,6 +13,7 @@ async function verifyAuth(token: string) {
     const decodedToken = await adminAuth.verifyIdToken(token);
     return decodedToken;
   } catch (e) {
+    console.error('Auth verification failed:', e);
     throw new Error('Unauthorized');
   }
 }
@@ -57,7 +58,8 @@ export async function grantAdminRoleAction(token: string, email: string) {
   const adminUser = await verifyAdmin(token);
   
   const user = await adminAuth.getUserByEmail(email);
-  await adminAuth.setCustomUserClaims(user.uid, { admin: true });
+  const currentClaims = user.customClaims || {};
+  await adminAuth.setCustomUserClaims(user.uid, { ...currentClaims, admin: true });
   
   return { success: true, message: `Admin role granted to ${email}` };
 }
