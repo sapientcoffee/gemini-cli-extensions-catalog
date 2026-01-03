@@ -1,9 +1,12 @@
+/**
+ * Copyright 2026 Google LLC
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
 'use server';
 
 import { adminAuth, adminDb } from '../lib/firebase-admin';
 import { FieldValue } from 'firebase-admin/firestore';
-
-const ADMIN_EMAILS = ['admin@cymbal.coffee', 'robedwards@cymbal.coffee', 'admin@robedwards.altostrat.com'];
 
 async function verifyAuth(token: string) {
   try {
@@ -16,10 +19,9 @@ async function verifyAuth(token: string) {
 
 async function verifyAdmin(token: string) {
   const user = await verifyAuth(token);
-  const email = user.email || '';
   const hasClaim = user.admin === true;
   
-  if (!hasClaim && !ADMIN_EMAILS.includes(email)) {
+  if (!hasClaim) {
     throw new Error('Permission Denied: Admins only.');
   }
   return user;

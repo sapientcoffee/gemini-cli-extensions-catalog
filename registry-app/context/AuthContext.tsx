@@ -1,3 +1,8 @@
+/**
+ * Copyright 2026 Google LLC
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
 'use client';
 
 import { createContext, useContext, useEffect, useState, ReactNode } from 'react';
@@ -27,16 +32,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const [isAdmin, setIsAdmin] = useState(false);
     const router = useRouter();
     
-    // TODO: specific admin emails, ideally moved to remote config or claims
-    const ADMIN_EMAILS = ['admin@cymbal.coffee', 'robedwards@cymbal.coffee', 'admin@robedwards.altostrat.com'];
-
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
             if (currentUser) {
                 // Allow any authenticated user
                 setUser(currentUser);
                 
-                // Check Admin Status (Claim OR Hardcoded)
+                // Check Admin Status (Claim Only)
                 let hasAdminClaim = false;
                 try {
                     const tokenResult = await currentUser.getIdTokenResult();
@@ -45,8 +47,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
                     console.error("Error fetching token claims", e);
                 }
                 
-                const isHardcodedAdmin = ADMIN_EMAILS.includes(currentUser.email || '');
-                setIsAdmin(hasAdminClaim || isHardcodedAdmin);
+                setIsAdmin(hasAdminClaim);
             } else {
                 setUser(null);
                 setIsAdmin(false);
