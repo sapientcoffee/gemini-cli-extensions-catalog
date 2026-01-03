@@ -9,7 +9,7 @@ service cloud.firestore {
     
     // Admin check - Hardcoded list for V1
     function isAdmin() {
-       return isSignedIn() && request.auth.token.email in ['admin@cymbal.coffee', 'robedwards@cymbal.coffee']; 
+       return isSignedIn() && request.auth.token.email in ['admin@cymbal.coffee', 'robedwards@cymbal.coffee', 'admin@robedwards.altostrat.com']; 
     }
 
     // Registry: Authenticated Read, Admin Write

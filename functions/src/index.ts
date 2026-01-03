@@ -126,9 +126,9 @@ export const approveSubmission = onCall({ cors: true }, async (request) => {
     // 2. Verify Admin Role (Simple email check for V1)
     const userEmail = request.auth.token.email || '';
     // TODO: Move admin list to environment configuration or database
-    const ADMIN_EMAILS = ['admin@cymbal.coffee', 'robedwards@cymbal.coffee']; 
+    const ADMIN_EMAILS = ['admin@cymbal.coffee', 'robedwards@cymbal.coffee', 'admin@robedwards.altostrat.com']; 
     
-    if (!userEmail.endsWith('@cymbal.coffee') || !ADMIN_EMAILS.includes(userEmail)) {
+    if (!userEmail.endsWith('@cymbal.coffee') && !ADMIN_EMAILS.includes(userEmail)) {
         throw new HttpsError('permission-denied', 'Only admins can approve submissions.');
     }
 

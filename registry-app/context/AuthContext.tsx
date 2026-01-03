@@ -28,7 +28,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const router = useRouter();
     
     // TODO: specific admin emails, ideally moved to remote config or claims
-    const ADMIN_EMAILS = ['admin@cymbal.coffee', 'robedwards@cymbal.coffee'];
+    const ADMIN_EMAILS = ['admin@cymbal.coffee', 'robedwards@cymbal.coffee', 'admin@robedwards.altostrat.com'];
 
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
