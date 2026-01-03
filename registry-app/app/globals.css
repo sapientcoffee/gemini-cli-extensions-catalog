@@ -9,6 +9,12 @@
   --color-coffee-accent: #D4A373;
   --color-tech-green: #10B981;
 
+  /* Cymbal Brand Colors */
+  --color-rich-espresso: #4B3832;
+  --color-warm-crema: #F5F5DC;
+  --color-cymbal-gold: #FFD700;
+  --color-charcoal: #36454F;
+
   --font-sans: var(--font-inter);
   --font-mono: var(--font-roboto-mono);
 }
