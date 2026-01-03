@@ -3,9 +3,22 @@ import { onDocumentCreated } from "firebase-functions/v2/firestore";
 import * as logger from "firebase-functions/logger";
 import { getFirestore } from "firebase-admin/firestore";
 import { initializeApp } from "firebase-admin/app";
+import { getAuth } from "firebase-admin/auth";
 
 initializeApp();
 const db = getFirestore();
+const auth = getAuth();
+
+// Bootstrap list of Super Admins (immutable via code)
+const SUPER_ADMINS = ['admin@cymbal.coffee', 'robedwards@cymbal.coffee', 'admin@robedwards.altostrat.com'];
+
+// Helper to check admin status
+function isAdmin(request: any): boolean {
+    if (!request.auth) return false;
+    const email = request.auth.token.email || '';
+    const hasClaim = request.auth.token.admin === true;
+    return hasClaim || SUPER_ADMINS.includes(email);
+}
 
 // Function A: onSubmissionCreated (Firestore Trigger)
 // Triggers when a new document is created in the 'submissions' collection.
@@ -123,12 +136,8 @@ export const approveSubmission = onCall({ cors: true }, async (request) => {
         throw new HttpsError('unauthenticated', 'The function must be called while authenticated.');
     }
 
-    // 2. Verify Admin Role (Simple email check for V1)
-    const userEmail = request.auth.token.email || '';
-    // TODO: Move admin list to environment configuration or database
-    const ADMIN_EMAILS = ['admin@cymbal.coffee', 'robedwards@cymbal.coffee', 'admin@robedwards.altostrat.com']; 
-    
-    if (!userEmail.endsWith('@cymbal.coffee') && !ADMIN_EMAILS.includes(userEmail)) {
+    // 2. Verify Admin Role
+    if (!isAdmin(request)) {
         throw new HttpsError('permission-denied', 'Only admins can approve submissions.');
     }
 
@@ -157,7 +166,7 @@ export const approveSubmission = onCall({ cors: true }, async (request) => {
         await registryRef.set({
             ...submissionData,
             status: 'approved',
-            approvedBy: userEmail,
+            approvedBy: request.auth.token.email,
             approvedAt: new Date().toISOString()
         });
 
@@ -167,12 +176,39 @@ export const approveSubmission = onCall({ cors: true }, async (request) => {
             registryId: submissionId
         });
 
-        logger.info(`Submission ${submissionId} approved by ${userEmail}`);
+        logger.info(`Submission ${submissionId} approved by ${request.auth.token.email}`);
         return { success: true, registryId: submissionId };
 
     } catch (error) {
         logger.error("Error approving submission", error);
         if (error instanceof HttpsError) throw error;
         throw new HttpsError('internal', 'Unable to approve submission.');
+    }
+});
+
+// Function C: grantAdminRole (Callable)
+// Allows an existing admin to grant the admin role to another user by email.
+export const grantAdminRole = onCall({ cors: true }, async (request) => {
+    if (!request.auth) {
+        throw new HttpsError('unauthenticated', 'The function must be called while authenticated.');
+    }
+
+    if (!isAdmin(request)) {
+        throw new HttpsError('permission-denied', 'Only admins can grant admin roles.');
+    }
+
+    const { email } = request.data;
+    if (!email) {
+        throw new HttpsError('invalid-argument', 'The function must be called with an "email".');
+    }
+
+    try {
+        const user = await auth.getUserByEmail(email);
+        await auth.setCustomUserClaims(user.uid, { admin: true });
+        logger.info(`Admin role granted to ${email} by ${request.auth.token.email}`);
+        return { success: true, message: `Admin role granted to ${email}` };
+    } catch (error) {
+        logger.error("Error granting admin role", error);
+        throw new HttpsError('internal', `Unable to grant admin role: ${error}`);
     }
 });

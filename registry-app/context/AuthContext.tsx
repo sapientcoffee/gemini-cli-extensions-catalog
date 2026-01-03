@@ -31,11 +31,22 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const ADMIN_EMAILS = ['admin@cymbal.coffee', 'robedwards@cymbal.coffee', 'admin@robedwards.altostrat.com'];
 
     useEffect(() => {
-        const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+        const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
             if (currentUser) {
                 // Allow any authenticated user
                 setUser(currentUser);
-                setIsAdmin(ADMIN_EMAILS.includes(currentUser.email || ''));
+                
+                // Check Admin Status (Claim OR Hardcoded)
+                let hasAdminClaim = false;
+                try {
+                    const tokenResult = await currentUser.getIdTokenResult();
+                    hasAdminClaim = !!tokenResult.claims.admin;
+                } catch (e) {
+                    console.error("Error fetching token claims", e);
+                }
+                
+                const isHardcodedAdmin = ADMIN_EMAILS.includes(currentUser.email || '');
+                setIsAdmin(hasAdminClaim || isHardcodedAdmin);
             } else {
                 setUser(null);
                 setIsAdmin(false);

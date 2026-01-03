@@ -20,6 +20,8 @@ interface Submission {
 export default function AdminPage() {
   const [submissions, setSubmissions] = useState<Submission[]>([]);
   const [loading, setLoading] = useState(true);
+  const [newAdminEmail, setNewAdminEmail] = useState('');
+  const [adminStatus, setAdminStatus] = useState('');
 
   useEffect(() => {
     const q = query(collection(db, 'submissions'), where('status', '==', 'pending'));
@@ -59,6 +61,21 @@ export default function AdminPage() {
     }
   };
 
+  const handleAddAdmin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if(!newAdminEmail) return;
+    setAdminStatus('Adding...');
+    try {
+        const grantFunc = httpsCallable(functions, 'grantAdminRole');
+        await grantFunc({ email: newAdminEmail });
+        setAdminStatus(`Success! ${newAdminEmail} is now an admin.`);
+        setNewAdminEmail('');
+    } catch (error) {
+        console.error(error);
+        setAdminStatus('Error adding admin. Ensure email exists in Auth.');
+    }
+  };
+
   return (
     <AuthGuard adminOnly>
         <div className="min-h-screen flex flex-col bg-warm-crema">
@@ -66,6 +83,36 @@ export default function AdminPage() {
 
         <main className="flex-grow py-12 px-4 sm:px-6 lg:px-8">
             <div className="mx-auto max-w-7xl">
+                
+                {/* Admin Management Section */}
+                <div className="mb-12 bg-white rounded-lg shadow-sm border border-rich-espresso/5 p-6">
+                    <h2 className="text-xl font-bold font-heading text-rich-espresso mb-4">Manage Admins</h2>
+                    <form onSubmit={handleAddAdmin} className="flex flex-col sm:flex-row gap-4 items-end">
+                        <div className="w-full sm:max-w-md">
+                            <label htmlFor="adminEmail" className="block text-sm font-medium text-rich-espresso/70 mb-1">Grant Admin Role to Email</label>
+                            <input 
+                                id="adminEmail"
+                                type="email" 
+                                placeholder="colleague@cymbal.coffee"
+                                className="w-full h-10 rounded-md border border-rich-espresso/20 px-3 text-rich-espresso focus:outline-none focus:ring-2 focus:ring-cymbal-gold"
+                                value={newAdminEmail}
+                                onChange={(e) => setNewAdminEmail(e.target.value)}
+                            />
+                        </div>
+                        <button 
+                            type="submit"
+                            className="h-10 px-6 bg-rich-espresso text-warm-crema font-bold rounded-md hover:opacity-90 transition-opacity"
+                        >
+                            Grant Role
+                        </button>
+                    </form>
+                    {adminStatus && (
+                        <p className={`mt-3 text-sm font-medium ${adminStatus.startsWith('Success') ? 'text-green-600' : 'text-red-600'}`}>
+                            {adminStatus}
+                        </p>
+                    )}
+                </div>
+
                 {/* Page Heading */}
                 <div className="mb-8">
                     <h1 className="text-4xl font-bold font-heading text-rich-espresso mb-2">Extension Approval Queue</h1>
