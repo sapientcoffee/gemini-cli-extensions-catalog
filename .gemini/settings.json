@@ -1,0 +1,11 @@
+{
+    "mcpServers": {
+        "Stitch": {
+            "url": "https://stitch.googleapis.com/mcp",
+            "headers": {
+                "X-Goog-User-Project": "coffee-and-codey",
+                "Authorization": "Bearer ${STITCH_ACCESS_TOKEN}"
+            }
+        }
+    }
+}

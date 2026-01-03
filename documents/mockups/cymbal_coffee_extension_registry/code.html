@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Cymbal Coffee Extension Registry</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&amp;family=Work+Sans:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script>
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "primary": "#ffd900",
+              "background-light": "#f8f8f5",
+              "background-dark": "#23200f",
+              "rich-espresso": "#4B3832",
+              "warm-crema": "#F5F5DC",
+            },
+            fontFamily: {
+              "display": ["'Work Sans'", "sans-serif"],
+              "heading": ["'Playfair Display'", "serif"],
+            },
+            borderRadius: {
+              "DEFAULT": "0.25rem",
+              "lg": "0.5rem",
+              "xl": "0.75rem",
+              "full": "9999px"
+            },
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+</head>
+<body class="font-display bg-warm-crema dark:bg-background-dark text-rich-espresso dark:text-background-light">
+<div class="relative flex min-h-screen w-full flex-col">
+<div class="layout-container mx-auto flex h-full w-full max-w-5xl grow flex-col px-4 sm:px-6 lg:px-8">
+<header class="flex items-center justify-between whitespace-nowrap border-b border-solid border-rich-espresso/10 dark:border-primary/20 py-6">
+<div class="flex items-center gap-4">
+<div class="size-8 text-primary">
+<svg fill="none" viewbox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+<path clip-rule="evenodd" d="M39.475 21.6262C40.358 21.4363 40.6863 21.5589 40.7581 21.5934C40.7876 21.655 40.8547 21.857 40.8082 22.3336C40.7408 23.0255 40.4502 24.0046 39.8572 25.2301C38.6799 27.6631 36.5085 30.6631 33.5858 33.5858C30.6631 36.5085 27.6632 38.6799 25.2301 39.8572C24.0046 40.4502 23.0255 40.7407 22.3336 40.8082C21.8571 40.8547 21.6551 40.7875 21.5934 40.7581C21.5589 40.6863 21.4363 40.358 21.6262 39.475C21.8562 38.4054 22.4689 36.9657 23.5038 35.2817C24.7575 33.2417 26.5497 30.9744 28.7621 28.762C30.9744 26.5497 33.2417 24.7574 35.2817 23.5037C36.9657 22.4689 38.4054 21.8562 39.475 21.6262ZM4.41189 29.2403L18.7597 43.5881C19.8813 44.7097 21.4027 44.9179 22.7217 44.7893C24.0585 44.659 25.5148 44.1631 26.9723 43.4579C29.9052 42.0387 33.2618 39.5667 36.4142 36.4142C39.5667 33.2618 42.0387 29.9052 43.4579 26.9723C44.1631 25.5148 44.659 24.0585 44.7893 22.7217C44.9179 21.4027 44.7097 19.8813 43.5881 18.7597L29.2403 4.41187C27.8527 3.02428 25.8765 3.02573 24.2861 3.36776C22.6081 3.72863 20.7334 4.58419 18.8396 5.74801C16.4978 7.18716 13.9881 9.18353 11.5858 11.5858C9.18354 13.988 7.18717 16.4978 5.74802 18.8396C4.58421 20.7334 3.72865 22.6081 3.36778 24.2861C3.02574 25.8765 3.02429 27.8527 4.41189 29.2403Z" fill="currentColor" fill-rule="evenodd"></path>
+</svg>
+</div>
+<h1 class="text-rich-espresso dark:text-background-light text-2xl font-bold leading-tight tracking-tight font-heading">Cymbal Coffee Extension Registry</h1>
+</div>
+</header>
+<main class="flex flex-col gap-6 py-8">
+<div class="px-4">
+<label class="flex flex-col w-full">
+<div class="flex w-full flex-1 items-stretch rounded-lg h-12 shadow-sm">
+<div class="text-rich-espresso/60 dark:text-background-light/60 flex bg-white dark:bg-background-dark items-center justify-center pl-4 rounded-l-lg border-r-0">
+<span class="material-symbols-outlined">search</span>
+</div>
+<input class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-lg text-rich-espresso dark:text-background-light focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-warm-crema dark:focus:ring-offset-background-dark border-none bg-white dark:bg-background-dark h-full placeholder:text-rich-espresso/60 dark:placeholder:text-background-light/60 px-4 rounded-l-none border-l-0 pl-2 text-base font-normal leading-normal" placeholder="Search by name or tag..." value=""/>
+</div>
+</label>
+</div>
+<div class="flex gap-3 px-4 flex-wrap">
+<button class="flex h-9 shrink-0 items-center justify-center gap-x-2 rounded-lg bg-primary pl-4 pr-4 font-medium text-rich-espresso shadow-sm transition-transform duration-200 hover:scale-105 active:scale-95">
+<p class="text-sm">All</p>
+</button>
+<button class="flex h-9 shrink-0 items-center justify-center gap-x-2 rounded-lg bg-white dark:bg-background-dark/80 pl-4 pr-4 font-medium text-rich-espresso dark:text-background-light shadow-sm transition-colors hover:bg-primary/50 dark:hover:bg-primary/30">
+<p class="text-sm">Personas</p>
+</button>
+<button class="flex h-9 shrink-0 items-center justify-center gap-x-2 rounded-lg bg-white dark:bg-background-dark/80 pl-4 pr-4 font-medium text-rich-espresso dark:text-background-light shadow-sm transition-colors hover:bg-primary/50 dark:hover:bg-primary/30">
+<p class="text-sm">Tools</p>
+</button>
+</div>
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 p-4">
+<div class="flex flex-col gap-3 rounded-lg bg-white dark:bg-background-dark/80 shadow-md p-4 transition-shadow hover:shadow-xl">
+<div class="w-full bg-center bg-no-repeat aspect-square bg-cover rounded-lg" data-alt="Abstract line art of a coffee cup with code symbols." style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCHtb18W5vJLQ9GtezZzsoyu5BHnM0CWfLg28Z1C0hRJncyTjdURQvtu9QED3wDjO--So06e2LCnOx2L1CimKs9EO87a607hTOMwQw6DlzP2SumSKQeUrKnLe-cD-J7qbZg9-clVV0iFsOwDlsRayt0oPdREvYTDfcJG848pEfXJwDs89M50Bv5OV1jQlyEC8j37JjugIEYQC91PbXc1VU9XEJ38VxHJaDjdElYA8loq8O3oMVVXJUHo0zNQcU2oU0kqKkJD2TwrWc");'></div>
+<div class="flex flex-col gap-2">
+<h3 class="text-rich-espresso dark:text-background-light text-xl font-bold font-heading">Espresso Shot Debugger</h3>
+<p class="text-rich-espresso/80 dark:text-background-light/80 text-sm font-normal leading-normal">A tool for debugging espresso machine output.</p>
+<div class="flex flex-wrap gap-2 pt-1">
+<span class="text-xs font-medium bg-primary/20 text-rich-espresso dark:bg-primary/30 dark:text-background-light px-2.5 py-1 rounded-full">#debug</span>
+<span class="text-xs font-medium bg-primary/20 text-rich-espresso dark:bg-primary/30 dark:text-background-light px-2.5 py-1 rounded-full">#devtools</span>
+</div>
+</div>
+</div>
+<div class="flex flex-col gap-3 rounded-lg bg-white dark:bg-background-dark/80 shadow-md p-4 transition-shadow hover:shadow-xl">
+<div class="w-full bg-center bg-no-repeat aspect-square bg-cover rounded-lg" data-alt="Stylized icon of a person with a coffee bean." style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCVJDrQhmkI43mV5gdgrnfF2_Usg-BBrlOxmh-5dGDu6UYKS9sR01zM4vWVbw7bKRQBRoHUFMkQ0atvbD-uunRfYhSSZddZWZqimKTZxa3HQgNUA9kZ7m4QYMBNYfyY9q5i-gFgUlnzyUGk_l5cKbtmq6ip0b40mGq8MmkvK7SbvjAIA-gDUtrk9-_j8OAUDczrI5JUW5_a51945KixzWYH615yQyrlsjNdnm59AUavk3tnasFKV9OnlVXMjUkBrSLMyWcwNwwPHM0");'></div>
+<div class="flex flex-col gap-2">
+<h3 class="text-rich-espresso dark:text-background-light text-xl font-bold font-heading">Barista Buddy</h3>
+<p class="text-rich-espresso/80 dark:text-background-light/80 text-sm font-normal leading-normal">Quick access to common barista tasks and information.</p>
+<div class="flex flex-wrap gap-2 pt-1">
+<span class="text-xs font-medium bg-primary/20 text-rich-espresso dark:bg-primary/30 dark:text-background-light px-2.5 py-1 rounded-full">#persona-barista</span>
+<span class="text-xs font-medium bg-primary/20 text-rich-espresso dark:bg-primary/30 dark:text-background-light px-2.5 py-1 rounded-full">#tools</span>
+</div>
+</div>
+</div>
+<div class="flex flex-col gap-3 rounded-lg bg-white dark:bg-background-dark/80 shadow-md p-4 transition-shadow hover:shadow-xl">
+<div class="w-full bg-center bg-no-repeat aspect-square bg-cover rounded-lg" data-alt="A simple graph line increasing over a coffee bean shape." style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBIYnl3XOB0CqED8scw4eUA2MiCDdP4s-Bb9Dsr_fpEQfp4gkmnFFR7ieB9QWU_5KvKFc_kQBFFN7pV7nUkfBF2dtI09zTKGr8-0Uy6l2ohE5GETF9IM3m2Ld84kHQT6pC7NHuk2C976YV47nVvzUGp0tS5rTXI9DW-RtH9tcjFAz-qe35rm8_BdgbILNMwRgyOfRC4pjPXli7rK2VDNLwVfcgY92bJKZAHHy2AXZ2zJVvb6SyiaJsOVfii0W7U4OYOSFXDQqoNiWE");'></div>
+<div class="flex flex-col gap-2">
+<h3 class="text-rich-espresso dark:text-background-light text-xl font-bold font-heading">Roast Profile Analyzer</h3>
+<p class="text-rich-espresso/80 dark:text-background-light/80 text-sm font-normal leading-normal">Analyze and compare coffee roast profiles.</p>
+<div class="flex flex-wrap gap-2 pt-1">
+<span class="text-xs font-medium bg-primary/20 text-rich-espresso dark:bg-primary/30 dark:text-background-light px-2.5 py-1 rounded-full">#analytics</span>
+<span class="text-xs font-medium bg-primary/20 text-rich-espresso dark:bg-primary/30 dark:text-background-light px-2.5 py-1 rounded-full">#roasting</span>
+</div>
+</div>
+</div>
+<div class="flex flex-col gap-3 rounded-lg bg-white dark:bg-background-dark/80 shadow-md p-4 transition-shadow hover:shadow-xl">
+<div class="w-full bg-center bg-no-repeat aspect-square bg-cover rounded-lg" data-alt="A map of the world made of coffee beans." style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBghR2Pjuac739vzNtwhTaXd2rjZnIZPJJ8s_yokajMpD-V2Ly46cyVZnieVjv8fWRD79Y6uIM3Y5f3jKZbnEp9U1S_HT3OhhCNT_fFA8xVHBEYhOLH3qkh_r30PTp6Rxm9BMmK2DOZyOo9sJ1VNberGS3-eHccs7Pg5F0PRy65LAX99WiFcGph1ddHrrNmCOr1EuybMcUogTYmptDl-D7XRXp-GyEQ2Zd0sgrpaZkz0xRdliXCgxOScbfhX96AQx4ZD7wMIdMS9d4");'></div>
+<div class="flex flex-col gap-2">
+<h3 class="text-rich-espresso dark:text-background-light text-xl font-bold font-heading">Coffee Bean Sourcing Tool</h3>
+<p class="text-rich-espresso/80 dark:text-background-light/80 text-sm font-normal leading-normal">Track and manage coffee bean origins and suppliers.</p>
+<div class="flex flex-wrap gap-2 pt-1">
+<span class="text-xs font-medium bg-primary/20 text-rich-espresso dark:bg-primary/30 dark:text-background-light px-2.5 py-1 rounded-full">#sourcing</span>
+<span class="text-xs font-medium bg-primary/20 text-rich-espresso dark:bg-primary/30 dark:text-background-light px-2.5 py-1 rounded-full">#inventory</span>
+</div>
+</div>
+</div>
+<div class="flex flex-col gap-3 rounded-lg bg-white dark:bg-background-dark/80 shadow-md p-4 transition-shadow hover:shadow-xl">
+<div class="w-full bg-center bg-no-repeat aspect-square bg-cover rounded-lg" data-alt="Speech bubbles arranged in a circle." style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBDZeTRbMh0DnJ6ccHJiDU1jUWAZQ--fa5uckZC5kUxF9StShqv0qQp_XHZJsTtmCJFu3vEOT3kI1kvLJ9jIwsaJk_NNpWlyg9Zc6PzTgj-VRvRemlje_UPvvin4_WYsBKvG4KMeKuT2V8dNzM3ExzwJquGNOsfxxpjHoLhq_vwp2odnlDfcTXj3nlYv5PnjjC_Y4iLY2k8w6ReKs0_eFsrillf3av3hcLi677Eef179wYDqlGrhoK-yexXXXSVVoQZqj6epszrEeI");'></div>
+<div class="flex flex-col gap-2">
+<h3 class="text-rich-espresso dark:text-background-light text-xl font-bold font-heading">Customer Feedback Hub</h3>
+<p class="text-rich-espresso/80 dark:text-background-light/80 text-sm font-normal leading-normal">Aggregate and view customer feedback in one place.</p>
+<div class="flex flex-wrap gap-2 pt-1">
+<span class="text-xs font-medium bg-primary/20 text-rich-espresso dark:bg-primary/30 dark:text-background-light px-2.5 py-1 rounded-full">#feedback</span>
+<span class="text-xs font-medium bg-primary/20 text-rich-espresso dark:bg-primary/30 dark:text-background-light px-2.5 py-1 rounded-full">#crm</span>
+</div>
+</div>
+</div>
+<div class="flex flex-col gap-3 rounded-lg bg-white dark:bg-background-dark/80 shadow-md p-4 transition-shadow hover:shadow-xl">
+<div class="w-full bg-center bg-no-repeat aspect-square bg-cover rounded-lg" data-alt="A clipboard with a checkmark and coffee bean icon." style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCJWlUPhOlzEaUPxVd2GObOO69xA28kMgOVLgqxkPy8f3Sdl-Fh8IIrkypRFUxAzlxuAZSH0fMSqZJaAZPH51MROWj6GH03nsM5Y2y8HbG3JBspkj9Zh-mZ6uTDo0wRIsv1bpIvCPiI5Qu3WURiIBOMMK_VEAq3YEKncHlj-bX5LRfZR7QE9DSeowAphmRRMXZTyR6SyvC8J7--5YkfUSdYgseZvME_83L1sKZHNYEslrCbSAgTCotE4cjp5wEWtYYQ1DucjryCEuI");'></div>
+<div class="flex flex-col gap-2">
+<h3 class="text-rich-espresso dark:text-background-light text-xl font-bold font-heading">Inventory Tracker</h3>
+<p class="text-rich-espresso/80 dark:text-background-light/80 text-sm font-normal leading-normal">Real-time tracking of coffee bean and supply inventory.</p>
+<div class="flex flex-wrap gap-2 pt-1">
+<span class="text-xs font-medium bg-primary/20 text-rich-espresso dark:bg-primary/30 dark:text-background-light px-2.5 py-1 rounded-full">#inventory</span>
+<span class="text-xs font-medium bg-primary/20 text-rich-espresso dark:bg-primary/30 dark:text-background-light px-2.5 py-1 rounded-full">#tools</span>
+</div>
+</div>
+</div>
+<div class="flex flex-col gap-3 rounded-lg bg-white dark:bg-background-dark/80 shadow-md p-4 transition-shadow hover:shadow-xl">
+<div class="w-full bg-center bg-no-repeat aspect-square bg-cover rounded-lg" data-alt="Stylized icon of a person with a shopping cart." style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCLlr-tj2AV_ctqn3np8CYiubUVnP3KTzjYBEiZIN1O-VuSztWA0noH2zwHgx6XYH2Axvi7qjh1xEk5_ifWRYe8OAy_0e66E-wwKwQsNevUUzICZPHDIvdfsbny72gcBW2_QioH467wqTL-hV0JL9VuEoZIUhudbetvMV5hmlUm48i8iOUtyWZAbZnD91aLyo814KV3Doq9jXao2p6fuyuSKBGdOunOlQYrv0anVTmdM8HcjMUPp_HL6qYyhP3-Qwwwa0OM-xPDoc8");'></div>
+<div class="flex flex-col gap-2">
+<h3 class="text-rich-espresso dark:text-background-light text-xl font-bold font-heading">Loyal Customer Persona</h3>
+<p class="text-rich-espresso/80 dark:text-background-light/80 text-sm font-normal leading-normal">Simulates behavior of a loyal, returning customer.</p>
+<div class="flex flex-wrap gap-2 pt-1">
+<span class="text-xs font-medium bg-primary/20 text-rich-espresso dark:bg-primary/30 dark:text-background-light px-2.5 py-1 rounded-full">#persona-customer</span>
+<span class="text-xs font-medium bg-primary/20 text-rich-espresso dark:bg-primary/30 dark:text-background-light px-2.5 py-1 rounded-full">#testing</span>
+</div>
+</div>
+</div>
+<div class="flex flex-col gap-3 rounded-lg bg-white dark:bg-background-dark/80 shadow-md p-4 transition-shadow hover:shadow-xl">
+<div class="w-full bg-center bg-no-repeat aspect-square bg-cover rounded-lg" data-alt="A calendar icon with a coffee cup overlay." style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuD2P1P1RY7anVKEnEuozwCwzXfWJ-p50W_Rj9UPVRl7u0pTZiuoYynaEYPF56MAsZy8moj9W4WSudnT1hGNeHnQF356YMgrGELsi9S8keMkoqytmWDaCcGPUP9gijFBbEJwXMXGeuigmf6My4NVtRBkWilngovRvfcla-rg-fkZAvAqYRv8YKBABeWl27HijHsHspCxNFjLNGsXcEytxDQpNsYPrReo5aruIrfyyVj-YJ9EbOsuUB0xSY_K1OX_r9svVMdPyqbKLe8");'></div>
+<div class="flex flex-col gap-2">
+<h3 class="text-rich-espresso dark:text-background-light text-xl font-bold font-heading">Shift Scheduler</h3>
+<p class="text-rich-espresso/80 dark:text-background-light/80 text-sm font-normal leading-normal">Tool for managing barista shifts and schedules.</p>
+<div class="flex flex-wrap gap-2 pt-1">
+<span class="text-xs font-medium bg-primary/20 text-rich-espresso dark:bg-primary/30 dark:text-background-light px-2.5 py-1 rounded-full">#management</span>
+<span class="text-xs font-medium bg-primary/20 text-rich-espresso dark:bg-primary/30 dark:text-background-light px-2.5 py-1 rounded-full">#tools</span>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+</div>
+</body></html>

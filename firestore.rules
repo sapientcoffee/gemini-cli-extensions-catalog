@@ -1,0 +1,32 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Helper function
+    function isSignedIn() {
+      return request.auth != null;
+    }
+    
+    function isCymbalUser() {
+      return isSignedIn() && request.auth.token.email.matches('.*@cymbal.coffee');
+    }
+    
+    function isAdmin() {
+       // Ideally use custom claims, but for V1, hardcode check or specific doc
+       return isCymbalUser() && request.auth.token.email in ['admin@cymbal.coffee']; 
+    }
+
+    // Registry: Public Read, Admin Write
+    match /registry/{docId} {
+      allow read: if isCymbalUser();
+      allow write: if isAdmin();
+    }
+
+    // Submissions: Authenticated Create, Owner Edit
+    match /submissions/{docId} {
+      allow create: if isCymbalUser();
+      allow read: if isCymbalUser();
+      allow update: if isCymbalUser() && (resource.data.submittedBy == request.auth.uid || isAdmin());
+    }
+  }
+}
