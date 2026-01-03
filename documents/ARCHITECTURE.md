@@ -14,7 +14,7 @@ graph TD
     end
 
     subgraph "Firebase Infrastructure"
-        AppHosting[Firebase App Hosting\n(Cloud Run)]
+        AppHosting["Firebase App Hosting<br>(Cloud Run)"]
         Firestore[(Cloud Firestore)]
         Auth[Firebase Authentication]
         CloudFunc[Cloud Functions v2]
