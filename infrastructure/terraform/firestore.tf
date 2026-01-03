@@ -1,3 +1,6 @@
+# Copyright 2026 Google LLC
+# SPDX-License-Identifier: Apache-2.0
+
 # Configure Firestore Database (Native Mode)
 resource "google_firestore_database" "database" {
   provider                    = google-beta
@@ -20,17 +23,7 @@ resource "google_firebaserules_ruleset" "firestore" {
   source {
     files {
       name    = "firestore.rules"
-      content = <<EOT
-rules_version = '2';
-service cloud.firestore {
-  match /databases/{database}/documents {
-    // Lock down by default, specific rules deployed via CLI
-    match /{document=**} {
-      allow read, write: if false; 
-    }
-  }
-}
-EOT
+      content = file("../../firestore.rules")
     }
   }
 
