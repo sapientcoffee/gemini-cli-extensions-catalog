@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 
 export default function AuthGuard({ children, adminOnly = false }: { children: React.ReactNode, adminOnly?: boolean }) {
-    const { user, loading, signInWithGoogle } = useAuth();
+    const { user, loading, isAdmin, signInWithGoogle } = useAuth();
     const router = useRouter();
 
     useEffect(() => {
@@ -52,13 +52,15 @@ export default function AuthGuard({ children, adminOnly = false }: { children: R
         );
     }
 
-    if (adminOnly) {
-        // Simple client-side check for now. Secure with backend rules/claims.
-        // For mock purposes, we allow anyone or check a hardcoded list.
-        // Let's assume for this mock that any logged in user can see the admin page 
-        // OR we can restrict it.
-        // const isAdmin = user.email === 'admin@cymbal.coffee';
-        // if (!isAdmin) return <AccessDenied />
+    if (adminOnly && !isAdmin) {
+        return (
+            <div className="min-h-screen flex items-center justify-center bg-warm-crema">
+                <div className="text-center p-8 bg-white rounded-lg shadow-lg border border-red-200">
+                    <h2 className="text-2xl font-bold text-red-800 mb-2">Access Denied</h2>
+                    <p className="text-rich-espresso/70">You do not have permission to view this page.</p>
+                </div>
+            </div>
+        );
     }
 
     return <>{children}</>;

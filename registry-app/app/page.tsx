@@ -6,12 +6,14 @@ import { db } from '../lib/firebase';
 import ExtensionCard from '../components/ExtensionCard';
 import { Extension, ExtensionType } from '../lib/types';
 import Link from 'next/link';
+import { useAuth } from '../context/AuthContext';
 
 export default function Home() {
   const [searchQuery, setSearchQuery] = useState('');
   const [activeFilter, setActiveFilter] = useState<'all' | ExtensionType>('all');
   const [extensions, setExtensions] = useState<Extension[]>([]);
   const [loading, setLoading] = useState(true);
+  const { user, isAdmin, signOut } = useAuth();
 
   useEffect(() => {
     const fetchExtensions = async () => {
@@ -52,10 +54,18 @@ export default function Home() {
                 </div>
                 <h1 className="text-coffee-text text-lg font-bold tracking-tight">Cymbal Registry</h1>
             </div>
-            {/* Nav placeholder */}
+            {/* Nav */}
             <nav className="flex gap-4 items-center text-sm font-medium">
-                <Link href="/admin" className="text-coffee-muted hover:text-coffee-accent transition-colors">Admin</Link>
+                {user && (
+                    <Link href="/my-requests" className="text-coffee-muted hover:text-coffee-accent transition-colors">My Requests</Link>
+                )}
+                {isAdmin && (
+                    <Link href="/admin" className="text-coffee-muted hover:text-coffee-accent transition-colors">Admin</Link>
+                )}
                 <Link href="/submit" className="bg-coffee-accent text-coffee-dark px-4 py-1.5 rounded-md hover:bg-white transition-colors">Submit</Link>
+                {user && (
+                    <button onClick={() => signOut()} className="text-coffee-muted hover:text-coffee-text transition-colors">Sign Out</button>
+                )}
             </nav>
         </header>
 

@@ -7,26 +7,22 @@ service cloud.firestore {
       return request.auth != null;
     }
     
-    function isCymbalUser() {
-      return isSignedIn() && request.auth.token.email.matches('.*@cymbal.coffee');
-    }
-    
+    // Admin check - Hardcoded list for V1
     function isAdmin() {
-       // Ideally use custom claims, but for V1, hardcode check or specific doc
-       return isCymbalUser() && request.auth.token.email in ['admin@cymbal.coffee']; 
+       return isSignedIn() && request.auth.token.email in ['admin@cymbal.coffee', 'robedwards@cymbal.coffee']; 
     }
 
-    // Registry: Public Read, Admin Write
+    // Registry: Authenticated Read, Admin Write
     match /registry/{docId} {
-      allow read: if isCymbalUser();
+      allow read: if isSignedIn();
       allow write: if isAdmin();
     }
 
     // Submissions: Authenticated Create, Owner Edit
     match /submissions/{docId} {
-      allow create: if isCymbalUser();
-      allow read: if isCymbalUser();
-      allow update: if isCymbalUser() && (resource.data.submittedBy == request.auth.uid || isAdmin());
+      allow create: if isSignedIn();
+      allow read: if isAdmin() || (isSignedIn() && resource.data.submittedBy == request.auth.uid);
+      allow update: if isSignedIn() && (resource.data.submittedBy == request.auth.uid || isAdmin());
     }
   }
 }

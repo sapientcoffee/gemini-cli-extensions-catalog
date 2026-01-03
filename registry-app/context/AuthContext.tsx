@@ -14,6 +14,7 @@ import { useRouter } from 'next/navigation';
 interface AuthContextType {
     user: User | null;
     loading: boolean;
+    isAdmin: boolean;
     signInWithGoogle: () => Promise<void>;
     signOut: () => Promise<void>;
 }
@@ -23,15 +24,21 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export function AuthProvider({ children }: { children: ReactNode }) {
     const [user, setUser] = useState<User | null>(null);
     const [loading, setLoading] = useState(true);
+    const [isAdmin, setIsAdmin] = useState(false);
     const router = useRouter();
+    
+    // TODO: specific admin emails, ideally moved to remote config or claims
+    const ADMIN_EMAILS = ['admin@cymbal.coffee', 'robedwards@cymbal.coffee'];
 
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
             if (currentUser) {
                 // Allow any authenticated user
                 setUser(currentUser);
+                setIsAdmin(ADMIN_EMAILS.includes(currentUser.email || ''));
             } else {
                 setUser(null);
+                setIsAdmin(false);
             }
             setLoading(false);
         });
@@ -51,14 +58,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const signOut = async () => {
         try {
             await firebaseSignOut(auth);
-            router.push('/');
+            router.push('/signout');
         } catch (error) {
             console.error("Error signing out", error);
         }
     };
 
     return (
-        <AuthContext.Provider value={{ user, loading, signInWithGoogle, signOut }}>
+        <AuthContext.Provider value={{ user, loading, isAdmin, signInWithGoogle, signOut }}>
             {children}
         </AuthContext.Provider>
     );
