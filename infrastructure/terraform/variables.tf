@@ -1,3 +1,6 @@
+# Copyright 2026 Google LLC
+# SPDX-License-Identifier: Apache-2.0
+
 variable "project_id" {
   description = "The ID of the Google Cloud Project."
   type        = string

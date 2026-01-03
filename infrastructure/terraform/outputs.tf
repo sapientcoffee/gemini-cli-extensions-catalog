@@ -1,3 +1,6 @@
+# Copyright 2026 Google LLC
+# SPDX-License-Identifier: Apache-2.0
+
 # Retrieve the Web App config to output environment variables
 data "google_firebase_web_app_config" "default" {
   provider   = google-beta

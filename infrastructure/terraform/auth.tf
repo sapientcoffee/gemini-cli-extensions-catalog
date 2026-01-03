@@ -1,3 +1,6 @@
+# Copyright 2026 Google LLC
+# SPDX-License-Identifier: Apache-2.0
+
 # Configure Identity Platform (Firebase Auth)
 resource "google_identity_platform_config" "default" {
   provider = google-beta
