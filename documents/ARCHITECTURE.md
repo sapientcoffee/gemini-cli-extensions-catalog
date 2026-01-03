@@ -72,7 +72,40 @@ sequenceDiagram
     UI->>UI: Refreshes List
 ```
 
-### 3. User Role Management
+### 3. Rejection Workflow
+
+```mermaid
+sequenceDiagram
+    actor Admin
+    participant UI as Admin Dashboard
+    participant SA as Server Action (rejectSubmission)
+    participant DB as Firestore
+
+    Admin->>UI: Clicks "Reject"
+    UI->>SA: Calls Action (with ID Token)
+    SA->>SA: Verifies Admin Claim
+    SA->>DB: Updates 'submissions' (status: rejected, rejectedBy: admin)
+    UI->>UI: Refreshes List
+```
+
+### 4. Resubmission Workflow
+
+```mermaid
+sequenceDiagram
+    actor User
+    participant UI as Submission Page
+    participant SA as Server Action (resubmitExtension)
+    participant DB as Firestore
+
+    User->>UI: Updates Repo/Details & Clicks "Resubmit"
+    UI->>SA: Calls Action
+    SA->>SA: Verifies Ownership
+    SA->>DB: Updates 'submissions' (status: pending, resubmittedAt: time)
+    Note over DB: This resets the flow to the Validation stage (see Workflow 1)
+    UI->>UI: Shows "Pending" Status
+```
+
+### 5. User Role Management
 
 **Bootstrapping:**
 Since the Admin UI requires an existing admin to access it, the first admin must be provisioned via a CLI script:
