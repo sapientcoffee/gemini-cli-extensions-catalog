@@ -20,6 +20,14 @@ function isAdmin(request: any): boolean {
     return hasClaim || SUPER_ADMINS.includes(email);
 }
 
+// Security Scanner Helper
+function hasSecrets(text: string): boolean {
+    // Basic regex for Google API Key (AIza...)
+    const googleApiKey = /AIza[0-9A-Za-z-_]{35}/;
+    // Add more patterns as needed (AWS, etc)
+    return googleApiKey.test(text);
+}
+
 // Function A: onSubmissionCreated (Firestore Trigger)
 // Triggers when a new document is created in the 'submissions' collection.
 export const onSubmissionCreated = onDocumentCreated("submissions/{docId}", async (event) => {
@@ -83,8 +91,21 @@ export const onSubmissionCreated = onDocumentCreated("submissions/{docId}", asyn
         }
 
         // 4. Parse & Validate JSON
+        const manifestText = await response.text();
+        
+        // Security Scan
+        if (hasSecrets(manifestText)) {
+             logger.warn(`Security alert: Potential API key detected in ${repoUrl}`);
+             await snapshot.ref.update({
+                status: 'rejected',
+                statusMessage: 'Security Violation: Potential API Key detected in manifest.',
+                updatedAt: new Date().toISOString()
+             });
+             return;
+        }
+
         try {
-            manifest = await response.json();
+            manifest = JSON.parse(manifestText);
         } catch (e) {
             await snapshot.ref.update({
                 status: 'rejected',
