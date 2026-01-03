@@ -76,22 +76,47 @@ export default function Home() {
         {/* Important Notice */}
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-8">
             <div className="bg-yellow-500/10 border border-yellow-500/30 rounded-lg p-6 text-coffee-text">
-                <h3 className="text-lg font-bold text-yellow-600 mb-2">Important: Private Repository Access</h3>
-                <p className="text-sm mb-4 leading-relaxed">
-                    If you are installing an extension from a private repository, you must set the <code className="bg-black/20 px-1 py-0.5 rounded text-yellow-500">GITHUB_TOKEN</code> environment variable. 
-                    This allows the Gemini CLI to authenticate and fetch release data.
-                </p>
-                <div className="bg-black/20 rounded p-4 mb-4 text-sm font-mono overflow-x-auto">
-                    <p className="text-coffee-muted mb-2"># 1. Generate a Personal Access Token (PAT) with &apos;repo&apos; scope at:</p>
-                    <a href="https://github.com/settings/tokens" target="_blank" className="text-blue-400 hover:underline mb-4 block">https://github.com/settings/tokens</a>
-                    <p className="text-coffee-muted mb-2"># 2. Set the variable in your terminal:</p>
-                    <p className="text-green-400">export GITHUB_TOKEN=your_token_here</p>
+                <h3 className="text-lg font-bold text-yellow-600 mb-4">Important: Private Repository Access</h3>
+                
+                <div className="space-y-6">
+                    {/* GitHub Section */}
+                    <div>
+                        <h4 className="font-bold text-rich-espresso mb-2">GitHub Private Repositories</h4>
+                        <p className="text-sm mb-2 leading-relaxed">
+                            If you are installing from a private GitHub repository, you must set the <code className="bg-black/20 px-1 py-0.5 rounded text-yellow-500">GITHUB_TOKEN</code> environment variable.
+                        </p>
+                        <div className="bg-black/20 rounded p-4 mb-2 text-sm font-mono overflow-x-auto">
+                            <p className="text-coffee-muted mb-2"># 1. Generate a PAT with &apos;repo&apos; scope at <a href="https://github.com/settings/tokens" target="_blank" className="text-blue-400 hover:underline">github.com/settings/tokens</a></p>
+                            <p className="text-coffee-muted mb-2"># 2. Set the variable:</p>
+                            <p className="text-green-400">export GITHUB_TOKEN=your_token_here</p>
+                        </div>
+                        <p className="text-xs text-coffee-muted">
+                            See <a href="https://github.com/google-gemini/gemini-cli/issues/11996" target="_blank" className="text-coffee-accent hover:underline">Issue #11996</a> for security details.
+                        </p>
+                    </div>
+
+                    {/* Non-GitHub Section */}
+                    <div>
+                        <h4 className="font-bold text-rich-espresso mb-2">GitLab & Bitbucket (Manual Setup)</h4>
+                        <p className="text-sm mb-2 leading-relaxed">
+                            <strong>Note:</strong> The Gemini CLI&apos;s automatic token injection (via <code>GITHUB_TOKEN</code>) <em>only</em> works for <code>github.com</code>. 
+                            For other providers, you must manually embed credentials in the URL when running the install command.
+                        </p>
+                        
+                        <div className="bg-black/20 rounded p-4 text-sm font-mono overflow-x-auto space-y-4">
+                            <div>
+                                <p className="text-coffee-accent font-bold mb-1">GitLab:</p>
+                                <p className="text-coffee-muted mb-1">Use a Personal Access Token with <code>read_repository</code> scope.</p>
+                                <p className="text-green-400 whitespace-nowrap">gemini extensions install &quot;https://oauth2:YOUR_PAT@gitlab.com/group/project.git&quot;</p>
+                            </div>
+                            <div>
+                                <p className="text-coffee-accent font-bold mb-1">Bitbucket:</p>
+                                <p className="text-coffee-muted mb-1">Use an App Password with <code>Repositories (Read)</code> permission.</p>
+                                <p className="text-green-400 whitespace-nowrap">gemini extensions install &quot;https://USERNAME:APP_PASSWORD@bitbucket.org/workspace/repo.git&quot;</p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <p className="text-sm text-coffee-muted">
-                    If you see a <strong>&quot;Failed to fetch release data ... 404&quot;</strong> error, it usually means the token is missing or invalid.
-                    <br/>
-                    See <a href="https://github.com/google-gemini/gemini-cli/issues/11996" target="_blank" className="text-coffee-accent hover:underline">Issue #11996</a> for details on security improvements.
-                </p>
             </div>
         </div>
 
