@@ -12,8 +12,8 @@ We are building a secure, centralized internal hub for discovering, submitting, 
     *   **Reasoning:** Consistent with the provided mockups.
 *   **State Management:** React Hooks & Context API
     *   **Reasoning:** Sufficient for this scale; no need for Redux/Zustand yet.
-*   **Mock Backend:** In-memory Service
-    *   **Reasoning:** To allow full UI prototyping without a live Firebase connection initially. We will simulate Firestore latency and data structure.
+*   **Mock Backend:** ~In-memory Service~ (Replaced by real Firestore & Server Actions)
+    *   **Reasoning:** Initial prototype used mock data, but production now uses live Firebase services.
 
 ## 3. Visual Design System
 Based on `branding_style_guide.md` & `mockups`:
@@ -41,7 +41,7 @@ Based on `branding_style_guide.md` & `mockups`:
 4.  **Buttons & Inputs:** Create styled `Button` and `Input` components.
 
 ### Phase 3: Feature Implementation
-1.  **Mock Data:** Create `lib/mockData.ts` with sample personas and tools as seen in PRD/Mockups.
+1.  **Mock Data:** Create `lib/mockData.ts` (Used for initial UI, now supplemented by Firestore).
 2.  **Home / Registry Page:**
     *   Implement Hero section (if any) or straight to Gallery.
     *   Implement Search and Filter logic (Personas vs Tools).
@@ -51,19 +51,25 @@ Based on `branding_style_guide.md` & `mockups`:
     *   Show full metadata, install command snippet (`gemini install ...`), and README content.
 4.  **Submission Page:**
     *   Form with: Git URL, Name, Type (Persona/Tool), Description.
-    *   Validation logic (mock).
+    *   Validation logic (Cloud Function `onSubmissionCreated`).
     *   Success/Error states.
 
 ### Phase 4: Admin & Approval Workflow
 1.  **Admin Dashboard:**
     *   Table view of "Pending" submissions.
-    *   Actions: Approve / Reject.
-    *   Mock "Approval" logic moving item from `submissions` to `registry`.
+    *   Actions: Approve / Reject (Server Actions).
+    *   Real approval logic moving item from `submissions` to `registry`.
 
 ### Phase 5: Polish & Verify
 1.  Review against `branding_style_guide.md`.
-2.  Verify all user stories in `prd.md` are met (simulated).
+2.  Verify all user stories in `prd.md` are met.
 3.  Ensure "Artisanal, Welcoming" tone in copy.
+
+### Phase 6: Refinement & Security (Completed)
+1.  **Auth Refactor:** Moved from hardcoded Admin emails to Firebase Custom Claims (`admin: true`).
+2.  **Infrastructure:** Created Terraform config for Firestore Rules and Auth.
+3.  **Clean Up:** Removed redundant Cloud Functions.
+4.  **Licensing:** Added Apache 2.0 headers.
 
 ## 5. Next Steps
 *   [x] Initialize Project
@@ -72,3 +78,6 @@ Based on `branding_style_guide.md` & `mockups`:
 *   [x] Build Extension Details Page
 *   [x] Build Submission Page
 *   [x] Build Admin Dashboard
+*   [x] Implement Real Backend (Firestore + Auth)
+*   [x] Refactor Admin Security
+

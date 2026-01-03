@@ -37,4 +37,5 @@ This plan details the completed steps for deploying the "Registry App" using **F
 
 ### ✅ Phase 5: Deployment
 *   **Frontend:** Auto-deployed via GitHub -> App Hosting.
-*   **Backend:** Functions & Rules deployed via CLI.
+*   **Backend:** Functions deployed via CLI.
+*   **Infrastructure:** Firestore Rules and Auth Config managed via Terraform (`infrastructure/terraform/`).

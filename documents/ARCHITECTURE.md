@@ -74,6 +74,16 @@ sequenceDiagram
 
 ### 3. User Role Management
 
+**Bootstrapping:**
+Since the Admin UI requires an existing admin to access it, the first admin must be provisioned via a CLI script:
+
+```bash
+# infrastructure/scripts/grant_admin.js
+node grant_admin.js <email>
+```
+
+**UI Flow (Adding Colleagues):**
+
 ```mermaid
 sequenceDiagram
     actor Admin

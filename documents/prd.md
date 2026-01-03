@@ -61,12 +61,12 @@ The workflow for adding new extensions to the private collection.
 *   **Authentication & Authorization:**
     *   All users must authenticate via Firebase Auth using their Cymbal Coffee Google account (`@cymbal.coffee`).
     *   Submission rights are granted to all authenticated users.
-    *   Approval/rejection rights are restricted to members of a designated "Gemini-Admins" Google Group, enforced via Firebase Security Rules and backend checks.
+    *   Approval/rejection rights are restricted to users with the `admin` Custom Claim (`token.admin == true`), enforced via Firebase Security Rules and backend checks.
 *   **Automated Scanning:**
     *   Upon submission, a Cloud Function will perform a static scan on the extension's source code to detect hardcoded secrets (e.g., API keys, passwords).
     *   The function will also check for known vulnerabilities in dependencies listed in common files like `package.json` or `requirements.txt`. A submission with critical vulnerabilities will be automatically flagged for rejection.
 *   **Data Storage & Firestore Rules:**
-    *   Users may only read from the `registry` collection and the `submissions` collection.
+    *   Users may only read from the `registry` collection and the `submissions` collection (own submissions only).
     *   Users can only create new documents in `submissions`.
     *   Users can only edit documents in `submissions` where the `submittedBy` field matches their authenticated `uid`.
     *   Only Admins can write to the `registry` collection or change the `status` field in `submissions`.
@@ -85,14 +85,19 @@ The workflow for adding new extensions to the private collection.
 * **`submissions/` (Collection):**
     * `repoUrl`: string
     * `submittedBy`: uid
-    * `status`: "pending" | "approved" | "rejected"
+    * `submittedByEmail`: string
+    * `status`: "pending" | "approved" | "rejected" | "error"
+    * `statusMessage`: string (for errors or rejection reasons)
     * `metadata`: Map (parsed from `gemini-extension.json`)
-    * `rejectionReason`: string (optional)
+    * `registryId`: string (reference to approved registry doc)
+    * `timestamps`: submittedAt, approvedAt, rejectedAt
 * **`registry/` (Collection):**
     * `name`: string
     * `type`: "persona" | "tool"
-    * `gitUrl`: string
+    * `repoUrl`: string
     * `version`: string
+    * `installCommand`: string
+    * `approvedBy`: string
 
 ---
 

@@ -21,18 +21,19 @@ A secure, centralized internal hub for discovering, submitting, and managing pro
 ## 📂 Project Structure
 
 ```
-registry-app/
-├── app/                  # Next.js App Router pages
-│   ├── actions.ts        # Server Actions (Admin logic)
-│   ├── extensions/[id]/  # Extension Details Page
-│   ├── submit/           # Submission Form
-│   ├── admin/            # Admin Dashboard (Protected)
-│   ├── profile/          # User Dashboard
-│   └── page.tsx          # Registry Gallery (Home)
-├── components/           # Reusable UI components (Header, ExtensionCard, AuthGuard)
-├── context/              # React Context (AuthContext)
-├── lib/                  # Utilities (Firebase init)
-└── public/               # Static assets
+registry-app/             # Next.js Frontend
+├── app/                  # App Router pages & actions
+├── components/           # UI components
+├── context/              # Auth state
+└── lib/                  # Utilities
+
+functions/                # Firebase Cloud Functions (Validation)
+├── src/                  # Source code
+└── index.ts              # Trigger definitions
+
+infrastructure/           # IaC & Scripts
+├── terraform/            # Google Cloud resources
+└── scripts/              # Utility scripts (e.g., grant_admin.js)
 ```
 
 ## 🛠️ Setup & Development
