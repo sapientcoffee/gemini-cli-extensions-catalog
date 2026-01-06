@@ -14,6 +14,17 @@
  * limitations under the License.
  */
 
+import { NodeSDK } from '@opentelemetry/sdk-node';
+import { getNodeAutoInstrumentations } from '@opentelemetry/auto-instrumentations-node';
+import { TraceExporter } from '@google-cloud/opentelemetry-cloud-trace-exporter';
+
+// Initialize OTEL before anything else
+const sdk = new NodeSDK({
+    traceExporter: new TraceExporter(),
+    instrumentations: [getNodeAutoInstrumentations()],
+});
+sdk.start();
+
 import { onCall, HttpsError } from "firebase-functions/v2/https";
 import { onDocumentCreated } from "firebase-functions/v2/firestore";
 import * as logger from "firebase-functions/logger";

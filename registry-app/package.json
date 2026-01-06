@@ -9,6 +9,11 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@google-cloud/opentelemetry-cloud-trace-exporter": "^3.0.0",
+    "@opentelemetry/auto-instrumentations-node": "^0.67.3",
+    "@opentelemetry/resources": "^2.2.0",
+    "@opentelemetry/sdk-node": "^0.208.0",
+    "@opentelemetry/semantic-conventions": "^1.38.0",
     "firebase": "^12.7.0",
     "firebase-admin": "^13.6.0",
     "next": "16.1.1",
