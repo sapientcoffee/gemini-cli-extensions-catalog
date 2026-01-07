@@ -136,10 +136,10 @@ export default function SubmitPage() {
                         <label htmlFor="repoUrl" className="block text-base font-bold text-rich-espresso mb-2">Git Repository URL</label>
                         <input 
                             id="repoUrl"
-                            type="url" 
+                            type="text" 
                             required
                             className="w-full h-14 rounded-lg border border-rich-espresso/20 px-4 text-rich-espresso focus:outline-none focus:ring-2 focus:ring-cymbal-gold bg-warm-crema/20"
-                            placeholder="e.g., https://github.com/cymbal-coffee/my-extension"
+                            placeholder="e.g., https://github.com/org/repo or git@github.com:org/repo.git"
                             value={formData.repoUrl}
                             onChange={(e) => setFormData({...formData, repoUrl: e.target.value})}
                         />

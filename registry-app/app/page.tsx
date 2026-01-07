@@ -111,27 +111,7 @@ export default function Home() {
                         </p>
                     </div>
 
-                    {/* Non-GitHub Section */}
-                    <div>
-                        <h4 className="font-bold text-rich-espresso mb-2">GitLab & Bitbucket (Manual Setup)</h4>
-                        <p className="text-sm mb-2 leading-relaxed">
-                            <strong>Note:</strong> The Gemini CLI&apos;s automatic token injection (via <code>GITHUB_TOKEN</code>) <em>only</em> works for <code>github.com</code>. 
-                            For other providers, you must manually embed credentials in the URL when running the install command.
-                        </p>
-                        
-                        <div className="bg-black/20 rounded p-4 text-sm font-mono overflow-x-auto space-y-4">
-                            <div>
-                                <p className="text-coffee-accent font-bold mb-1">GitLab:</p>
-                                <p className="text-coffee-muted mb-1">Use a Personal Access Token with <code>read_repository</code> scope.</p>
-                                <p className="text-green-400 whitespace-nowrap">gemini extensions install &quot;https://oauth2:YOUR_PAT@gitlab.com/group/project.git&quot;</p>
-                            </div>
-                            <div>
-                                <p className="text-coffee-accent font-bold mb-1">Bitbucket:</p>
-                                <p className="text-coffee-muted mb-1">Use an App Password with <code>Repositories (Read)</code> permission.</p>
-                                <p className="text-green-400 whitespace-nowrap">gemini extensions install &quot;https://USERNAME:APP_PASSWORD@bitbucket.org/workspace/repo.git&quot;</p>
-                            </div>
-                        </div>
-                    </div>
+
                 </div>
             </div>
         </div>
